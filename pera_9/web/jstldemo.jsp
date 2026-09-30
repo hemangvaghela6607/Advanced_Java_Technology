@@ -25,14 +25,14 @@
     <p>Display c:out variable: <strong><c:out value="${myGreeting}"/></strong></p>
 
     <%-- c:import: Importing a small snippet from another file --%>
-    <!--<h4>Content imported from another file (`footer.jsp`):</h4>-->
+    <h4>Content imported from another file (`footer.jsp`):</h4>
     <c:import url="footer.jsp"/>
 
     <%-- c:remove: Removing the variable created earlier --%>
     <c:remove var="myGreeting"/>
     
     <%-- Demonstrating the variable is now removed (it will display nothing or an empty string) --%>
-    <!--<p>After using c:remove, the variable myGreeting is now: **<c:out value="${myGreeting}"/>**</p>-->
+    <p>After using c:remove, the variable myGreeting is now: **<c:out value="${myGreeting}"/>**</p>
     
     <br>
 
