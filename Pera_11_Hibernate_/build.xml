@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Hibernate_Need_JDBC_Demo" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Hibernate_Need_JDBC_Demo.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <target name="-post-jar">
+    </target>
+</project>
