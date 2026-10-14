@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS college_db;
+
+CREATE TABLE IF NOT EXISTS employee (
+	emp_id INT AUTO_INCREMENT PRIMARY KEY,
+	emp_name VARCHAR(100) NOT NULL,
+	department VARCHAR(50),
+	salary DOUBLE
+);

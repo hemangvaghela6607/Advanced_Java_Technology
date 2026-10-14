@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    The <project> element is the ROOT element of every Maven pom.xml file.
+    POM = Project Object Model
+    This file tells Maven:
+    1. What this project is
+    2. Which libraries/dependencies the project needs
+    3. Which Java version to use
+    4. How Maven should build/run the project
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- modelVersion tells Maven which POM model/version this file follows.
+         4.0.0 is the standard POM model version.
+         IMPORTANT: This is NOT the version of Maven. It is the version of the POM model.-->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 1. PROJECT INFORMATION -->
+    <!-- groupId identifies the organization or group that owns the project.
+         Here: com.example
+         Think of groupId as: "Who created/owns this project?" -->
+    <groupId>com.example</groupId>
+
+    <!-- artifactId is the name of the project/artifact being created.
+         Here: employee-hibernate-annotation
+         Think of artifactId as: "What is this project called?" -->
+    <artifactId>employee-hibernate-annotation</artifactId>
+
+    <!-- version represents the version of our project. Here: 1.0
+         As the project changes, versions could be: 1.0 1.1 2.0 etc. -->
+    <version>1.0</version>
+
+    <!-- 2. PROJECT PROPERTIES -->
+    <properties>
+        
+    <!-- Tell Maven that the Java source code should be written / compiled using Java 8 language features.
+        1.8 means Java 8. -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        
+        <!-- Tell Maven to generate Java bytecode compatible with Java 8.
+            In simple words:
+                source = Java version used to write/compile the code
+                target = Java version that the compiled code should support
+            Therefore:
+                source = 1.8
+                target = 1.8
+        -->
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <!-- 3. DEPENDENCIES -->
+    <!-- <dependencies> contains the external libraries required by our application.
+        Instead of manually downloading JAR files, we tell Maven what libraries we need.
+        Maven then downloads them from a Maven repository (normally Maven Central) and manages them for us.
+    -->
+    <dependencies>
+        <!-- Hibernate Dependency -->
+        <!-- This dependency provides Hibernate ORM.
+            Hibernate is used in this project to map Java objects to database tables and perform database operations.
+            Instead of manually adding hibernate-core.jar, we simply declare it here.
+            Maven downloads Hibernate and its required dependencies automatically.
+        -->
+        <dependency>
+            
+            <!-- groupId identifies the organization/group that provides the library. Here: org.hibernate -->
+            <groupId>org.hibernate</groupId>
+            
+            <!-- artifactId identifies the particular library. Here: hibernate-core
+                This is the main Hibernate library. -->
+            <artifactId>hibernate-core</artifactId>
+
+            <!-- Specifies exactly which Hibernate version we want to use.
+                Here: 5.6.15.Final 
+                Specifying the version is important because different versions may have different APIs and dependencies. 
+            -->
+            <version>5.6.15.Final</version>
+        </dependency>
+
+        <!-- MySQL JDBC Driver Dependency -->
+        <!-- Our application uses MySQL as the database.
+            Java/Hibernate needs a JDBC driver to communicate with MySQL.
+            Instead of manually downloading the MySQL Connector/J JAR file, we declare it as a Maven dependency.
+        -->
+        <dependency>
+            <!-- Organization/group providing the library. -->
+            <groupId>com.mysql</groupId>
+            <!-- Name of the MySQL JDBC driver artifact. -->
+            <artifactId>mysql-connector-j</artifactId>
+            <!-- Version of the MySQL Connector/J driver. -->
+            <version>8.4.0</version>
+        </dependency>
+    </dependencies>
+</project>
