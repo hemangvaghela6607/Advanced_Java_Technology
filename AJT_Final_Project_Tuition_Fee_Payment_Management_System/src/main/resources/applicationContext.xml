@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- ================================================================= -->
+    <!-- Spring Core Dependency Injection (IoC Container Configuration)    -->
+    <!-- ================================================================= -->
+
+    <!-- ================================================================= -->
+    <!-- 1. DAO Layer Bean Definitions                                    -->
+    <!-- ================================================================= -->
+
+    <!-- JDBC-based DAOs (Demonstrates raw JDBC PreparedStatement) -->
+    <bean id="userDAO" class="com.tuitionfee.dao.UserDAOImpl"/>
+    <bean id="courseDAO" class="com.tuitionfee.dao.CourseDAOImpl"/>
+
+    <!-- Hibernate-based DAOs (Demonstrates Session & Transaction ORM) -->
+    <bean id="studentDAO" class="com.tuitionfee.dao.StudentDAOImpl"/>
+    <bean id="feeAssignmentDAO" class="com.tuitionfee.dao.FeeAssignmentDAOImpl"/>
+    <bean id="paymentDAO" class="com.tuitionfee.dao.PaymentDAOImpl"/>
+
+    <!-- ================================================================= -->
+    <!-- 2. Service Layer Bean Definitions (With Injected DAO Dependencies)-->
+    <!-- ================================================================= -->
+
+    <!-- UserService: Injects userDAO via Setter Injection -->
+    <bean id="userService" class="com.tuitionfee.service.UserService">
+        <property name="userDAO" ref="userDAO"/>
+    </bean>
+
+    <!-- CourseService: Injects courseDAO via Setter Injection -->
+    <bean id="courseService" class="com.tuitionfee.service.CourseService">
+        <property name="courseDAO" ref="courseDAO"/>
+    </bean>
+
+    <!-- StudentService: Injects studentDAO, userDAO, and courseDAO -->
+    <bean id="studentService" class="com.tuitionfee.service.StudentService">
+        <property name="studentDAO" ref="studentDAO"/>
+        <property name="userDAO" ref="userDAO"/>
+        <property name="courseDAO" ref="courseDAO"/>
+    </bean>
+
+    <!-- FeeService: Injects feeAssignmentDAO, studentDAO, and paymentDAO -->
+    <bean id="feeService" class="com.tuitionfee.service.FeeService">
+        <property name="feeAssignmentDAO" ref="feeAssignmentDAO"/>
+        <property name="studentDAO" ref="studentDAO"/>
+        <property name="paymentDAO" ref="paymentDAO"/>
+    </bean>
+
+    <!-- PaymentService: Injects paymentDAO and feeAssignmentDAO -->
+    <bean id="paymentService" class="com.tuitionfee.service.PaymentService">
+        <property name="paymentDAO" ref="paymentDAO"/>
+        <property name="feeAssignmentDAO" ref="feeAssignmentDAO"/>
+    </bean>
+
+</beans>

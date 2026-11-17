@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tuition Fee Payment Management System — AJT Project</title>
+  <style>
+    /* ───────── Base Reset & Variables ───────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue:    #1e40af;
+      --blue-lt: #3b82f6;
+      --green:   #16a34a;
+      --amber:   #d97706;
+      --red:     #dc2626;
+      --purple:  #7c3aed;
+      --teal:    #0d9488;
+      --gray-50: #f8fafc;
+      --gray-100:#f1f5f9;
+      --gray-200:#e2e8f0;
+      --gray-400:#94a3b8;
+      --gray-600:#475569;
+      --gray-800:#1e293b;
+      --white:   #ffffff;
+      --radius:  10px;
+      --shadow:  0 4px 20px rgba(0,0,0,0.08);
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      line-height: 1.7;
+    }
+
+    /* ───────── Hero Banner ───────── */
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 40%, #3b82f6 100%);
+      color: var(--white);
+      padding: 60px 40px 50px;
+      text-align: center;
+    }
+    .hero .emoji { font-size: 56px; display: block; margin-bottom: 16px; }
+    .hero h1 { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.5px; }
+    .hero h1 span { color: #93c5fd; }
+    .hero p  { font-size: 1.1rem; color: #bfdbfe; margin: 12px 0 28px; }
+    .badges  { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .badge {
+      display: inline-block; padding: 5px 16px; border-radius: 999px;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.5px;
+    }
+    .badge-blue   { background: #1d4ed8; color: #dbeafe; border: 1px solid #3b82f6; }
+    .badge-green  { background: #15803d; color: #dcfce7; border: 1px solid #22c55e; }
+    .badge-amber  { background: #b45309; color: #fef3c7; border: 1px solid #f59e0b; }
+    .badge-purple { background: #6d28d9; color: #ede9fe; border: 1px solid #a78bfa; }
+    .badge-teal   { background: #0f766e; color: #ccfbf1; border: 1px solid #14b8a6; }
+    .badge-red    { background: #b91c1c; color: #fee2e2; border: 1px solid #f87171; }
+    .badge-gray   { background: #334155; color: #e2e8f0; border: 1px solid #64748b; }
+
+    /* ───────── Layout ───────── */
+    .container { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; }
+    section    { margin-bottom: 52px; }
+    h2 {
+      font-size: 1.5rem; font-weight: 800; color: var(--blue);
+      padding-bottom: 10px; border-bottom: 3px solid var(--blue-lt);
+      margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+    }
+    h3 { font-size: 1.1rem; font-weight: 700; color: var(--gray-800); margin: 20px 0 10px; }
+    p  { color: var(--gray-600); margin-bottom: 14px; }
+
+    /* ───────── Cards ───────── */
+    .card {
+      background: var(--white); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 24px 28px; margin-bottom: 18px;
+      border-left: 5px solid var(--blue-lt);
+    }
+    .card.green  { border-left-color: var(--green); }
+    .card.amber  { border-left-color: var(--amber); }
+    .card.purple { border-left-color: var(--purple); }
+    .card.teal   { border-left-color: var(--teal); }
+    .card.red    { border-left-color: var(--red); }
+
+    /* ───────── Grid ───────── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    @media(max-width: 680px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.7rem; }
+    }
+
+    /* ───────── Tech Pill Cards ───────── */
+    .tech-card {
+      background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 22px 20px; text-align: center; transition: transform .2s;
+    }
+    .tech-card:hover { transform: translateY(-4px); }
+    .tech-card .icon { font-size: 2.4rem; margin-bottom: 10px; }
+    .tech-card h4 { font-size: 1rem; font-weight: 700; color: var(--gray-800); margin-bottom: 6px; }
+    .tech-card p  { font-size: 0.83rem; color: var(--gray-600); margin: 0; }
+    .tech-card .pill {
+      display: inline-block; margin-top: 10px; padding: 2px 12px;
+      border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+      background: var(--gray-100); color: var(--blue);
+    }
+
+    /* ───────── Table ───────── */
+    .tbl-wrap { overflow-x: auto; border-radius: var(--radius); box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; background: var(--white); }
+    thead th {
+      background: linear-gradient(90deg, #1e40af, #3b82f6);
+      color: var(--white); padding: 14px 16px; font-size: 0.85rem;
+      text-align: left; white-space: nowrap;
+    }
+    tbody td { padding: 12px 16px; font-size: 0.88rem; border-bottom: 1px solid var(--gray-200); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--gray-50); }
+    .yes { color: var(--green); font-weight: 700; }
+    .no  { color: var(--red);   font-weight: 700; }
+
+    /* ───────── Code Block ───────── */
+    pre {
+      background: #0f172a; color: #e2e8f0; border-radius: var(--radius);
+      padding: 22px; overflow-x: auto; font-size: 0.82rem; line-height: 1.8;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    code { font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; }
+    .dir   { color: #93c5fd; }
+    .file  { color: #86efac; }
+    .cmt   { color: #64748b; }
+
+    /* ───────── Steps ───────── */
+    .steps { counter-reset: step-counter; list-style: none; }
+    .steps li {
+      counter-increment: step-counter; position: relative;
+      padding: 16px 16px 16px 64px; background: var(--white);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+    .steps li::before {
+      content: counter(step-counter);
+      position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      color: var(--white); font-weight: 800; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .steps li strong { color: var(--blue); }
+    .steps li code {
+      background: var(--gray-100); border-radius: 4px;
+      padding: 1px 7px; font-size: 0.82rem; color: var(--blue);
+    }
+
+    /* ───────── Credential Cards ───────── */
+    .cred-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .cred-card {
+      background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 20px; border-top: 4px solid var(--blue-lt);
+    }
+    .cred-card.admin-card { border-top-color: var(--red); }
+    .cred-card h4 { font-size: 0.95rem; font-weight: 800; margin-bottom: 10px; }
+    .cred-card .label { font-size: 0.72rem; font-weight: 700; color: var(--gray-400); text-transform: uppercase; }
+    .cred-card .value { font-size: 0.88rem; color: var(--gray-800); font-family: monospace; margin-bottom: 8px; }
+    .role-pill {
+      display: inline-block; padding: 2px 10px; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 700;
+    }
+    .role-admin   { background: #fee2e2; color: #b91c1c; }
+    .role-student { background: #dbeafe; color: #1e40af; }
+
+    /* ───────── DB Schema ───────── */
+    .schema-table {
+      background: var(--white); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden; margin-bottom: 18px;
+    }
+    .schema-table .schema-header {
+      background: linear-gradient(90deg, #0f172a, #1e293b);
+      color: #93c5fd; padding: 11px 18px; font-size: 0.88rem;
+      font-weight: 700; font-family: monospace;
+    }
+    .schema-table ul { list-style: none; padding: 14px 18px; }
+    .schema-table ul li {
+      font-size: 0.83rem; padding: 4px 0; border-bottom: 1px solid var(--gray-100);
+      font-family: monospace; color: var(--gray-600);
+    }
+    .schema-table ul li:last-child { border-bottom: none; }
+    .col-pk  { color: #f59e0b; font-weight: 700; }
+    .col-fk  { color: #60a5fa; }
+    .col-type{ color: #86efac; margin-left: 6px; font-size: 0.78rem; }
+
+    /* ───────── Payment Flow ───────── */
+    .flow { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 20px 0; }
+    .flow-step {
+      background: var(--white); border: 2px solid var(--blue-lt); border-radius: 8px;
+      padding: 10px 14px; font-size: 0.8rem; font-weight: 600;
+      color: var(--blue); text-align: center; min-width: 100px;
+    }
+    .flow-arrow { color: var(--blue-lt); font-size: 1.4rem; padding: 0 4px; }
+
+    /* ───────── Footer ───────── */
+    .footer {
+      background: #0f172a; color: #64748b;
+      text-align: center; padding: 32px 24px; font-size: 0.83rem;
+    }
+    .footer strong { color: #93c5fd; }
+
+    /* ───────── Utility ───────── */
+    ul.checkmarks { list-style: none; padding-left: 0; }
+    ul.checkmarks li { padding: 5px 0; font-size: 0.9rem; color: var(--gray-600); }
+    ul.checkmarks li::before { content: "✅ "; }
+    .highlight {
+      background: #fffbeb; border-left: 4px solid var(--amber);
+      padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+    }
+    .highlight p { margin: 0; color: #78350f; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
+<div class="hero">
+  <span class="emoji">🎓</span>
+  <h1>Tuition Fee <span>Payment Management</span> System</h1>
+  <p>Advanced Java Technology (AJT) Project &nbsp;|&nbsp; Full-Stack Java EE Web Application</p>
+  <div class="badges">
+    <span class="badge badge-blue">Java 8</span>
+    <span class="badge badge-green">Hibernate 5.6</span>
+    <span class="badge badge-purple">Spring Core 5.3</span>
+    <span class="badge badge-teal">JSP + JSTL</span>
+    <span class="badge badge-amber">Servlets 4.0</span>
+    <span class="badge badge-red">JDBC</span>
+    <span class="badge badge-gray">Java Swing</span>
+    <span class="badge badge-blue">MySQL 8</span>
+    <span class="badge badge-green">Apache Tomcat</span>
+    <span class="badge badge-amber">Apache Maven</span>
+    <span class="badge badge-purple">NetBeans IDE</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ MAIN ═══════════════════════════════════════ -->
+<div class="container">
+
+  <!-- ── 1. DEFINITION ── -->
+  <section>
+    <h2>📖 1. Project Definition</h2>
+    <div class="card">
+      <p>
+        The <strong>Tuition Fee Payment Management System</strong> is a complete, multi-tiered,
+        role-based institutional fee management and billing web portal. It digitizes the entire
+        lifecycle of student enrollment, course fee assignment, payment collection,
+        receipt generation, and financial reporting for a tuition or coaching institute.
+      </p>
+      <p>
+        The system provides two secure user portals — one for <strong>Admin</strong> (institute staff)
+        and one for <strong>Students</strong> — alongside a standalone
+        <strong>Java Swing desktop utility</strong> for offline receipt lookup.
+      </p>
+      <p>
+        Built on the <strong>Java EE (Enterprise Edition)</strong> technology stack, packaged as a
+        <strong>WAR</strong> file, and deployed on <strong>Apache Tomcat</strong> with a
+        <strong>MySQL</strong> relational backend managed via XAMPP / phpMyAdmin.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── 2. ABSTRACTION / ARCHITECTURE ── -->
+  <section>
+    <h2>🏗️ 2. Architecture &amp; Abstraction</h2>
+    <p>The application follows a classic <strong>3-Tier MVC Architecture</strong> with clear separation of concerns enforced at every layer.</p>
+    <div class="grid-3">
+      <div class="card green">
+        <h3>🖥️ Presentation Layer</h3>
+        <p>JSP pages with JSTL &amp; EL. Zero Java scriptlets. Pure HTML templates that display data forwarded from Servlets.</p>
+      </div>
+      <div class="card">
+        <h3>⚙️ Business Layer</h3>
+        <p>Java Servlets (Controllers) + Spring-managed Service classes containing all business rules and validations.</p>
+      </div>
+      <div class="card amber">
+        <h3>🗄️ Data Access Layer</h3>
+        <p>DAO interfaces hide all SQL / HQL. Implementations use JDBC (users, courses) or Hibernate ORM (students, fees, payments).</p>
+      </div>
+    </div>
+
+    <h3>Key Design Patterns</h3>
+    <div class="grid-2">
+      <div class="card purple" style="padding:18px 22px;">
+        <strong>MVC Pattern</strong> — Model (entities + services), View (JSP), Controller (Servlets)
+      </div>
+      <div class="card teal" style="padding:18px 22px;">
+        <strong>DAO Pattern</strong> — Interfaces decouple business logic from database technology
+      </div>
+      <div class="card green" style="padding:18px 22px;">
+        <strong>Dependency Injection</strong> — Spring IoC injects DAOs into Services via XML config
+      </div>
+      <div class="card amber" style="padding:18px 22px;">
+        <strong>Singleton Pattern</strong> — DBConnection, HibernateUtil, SpringContextHelper
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. JAVA TECHNOLOGIES ── -->
+  <section>
+    <h2>☕ 3. Java Technologies Used</h2>
+
+    <div class="tbl-wrap" style="margin-bottom:30px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Technology</th>
+            <th>Used?</th>
+            <th>Version</th>
+            <th>Role in Project</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>JDBC</strong></td>
+            <td><span class="yes">✅ YES</span></td>
+            <td>MySQL Connector 8.0.33</td>
+            <td>UserDAOImpl, CourseDAOImpl, Swing utility — raw SQL with PreparedStatement</td>
+          </tr>
+          <tr>
+            <td><strong>Java Servlets</strong></td>
+            <td><span class="yes">✅ YES</span></td>
+            <td>Servlet API 4.0.1</td>
+            <td>Full HTTP Controller layer — LoginServlet, StudentServlet, PaymentServlet…</td>
+          </tr>
+          <tr>
+            <td><strong>JSP + JSTL + EL</strong></td>
+            <td><span class="yes">✅ YES</span></td>
+            <td>JSP 2.3 / JSTL 1.2</td>
+            <td>Scriptlet-free View layer for all Admin and Student pages</td>
+          </tr>
+          <tr>
+            <td><strong>Hibernate ORM</strong></td>
+            <td><span class="yes">✅ YES</span></td>
+            <td>Hibernate 5.6.15</td>
+            <td>ORM for Student, FeeAssignment, Payment entities — SessionFactory, HQL</td>
+          </tr>
+          <tr>
+            <td><strong>Spring Core (IoC / DI)</strong></td>
+            <td><span class="yes">✅ YES</span></td>
+            <td>Spring 5.3.31</td>
+            <td>Dependency Injection via applicationContext.xml — wires DAOs into Services</td>
+          </tr>
+          <tr>
+            <td><strong>Java Swing</strong></td>
+            <td><span class="yes">✅ YES</span></td>
+            <td>JDK 8 Built-in</td>
+            <td>Standalone desktop FeeReceiptViewer utility with JTable and print dialog</td>
+          </tr>
+          <tr>
+            <td><strong>Spring MVC</strong></td>
+            <td><span class="no">❌ NO</span></td>
+            <td>—</td>
+            <td>Not used — plain Servlets are the controllers, not DispatcherServlet</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- JDBC -->
+    <div class="card red">
+      <h3>🔌 JDBC — Java Database Connectivity</h3>
+      <p><strong>What:</strong> Low-level Java API to execute SQL directly via <code>Connection</code>, <code>PreparedStatement</code>, and <code>ResultSet</code>.</p>
+      <ul class="checkmarks">
+        <li><code>DBConnection.java</code> — loads <code>db.properties</code> and opens MySQL connections</li>
+        <li><code>UserDAOImpl</code> — login authentication via <code>PreparedStatement</code> (SQL injection safe)</li>
+        <li><code>CourseDAOImpl</code> — full CRUD on <code>courses</code> table</li>
+        <li><code>FeeReceiptViewer</code> (Swing) — direct MySQL lookup without the web layer</li>
+      </ul>
+    </div>
+
+    <!-- Servlets -->
+    <div class="card">
+      <h3>🌐 Java Servlets</h3>
+      <p><strong>What:</strong> Server-side Java classes extending <code>HttpServlet</code> that handle HTTP <code>GET</code> / <code>POST</code>. The <strong>Controller</strong> in MVC.</p>
+      <ul class="checkmarks">
+        <li><code>LoginServlet</code> — authenticates users, sets HttpSession, role-based redirect</li>
+        <li><code>StudentServlet</code> — full student CRUD (list, add, edit, update, delete)</li>
+        <li><code>CourseServlet</code> — course catalog management</li>
+        <li><code>FeeAssignmentServlet</code> — assigns fee structures to students</li>
+        <li><code>PaymentServlet</code> — processes payment, auto-generates TXN &amp; Receipt numbers</li>
+        <li><code>ReceiptServlet</code> — fetches and forwards receipt data to JSP</li>
+        <li><code>AdminReportServlet</code> — aggregates course-wise financial data</li>
+        <li><code>AuthFilter</code> — <code>javax.servlet.Filter</code> for role-based URL protection</li>
+      </ul>
+    </div>
+
+    <!-- JSP -->
+    <div class="card teal">
+      <h3>📄 JSP + JSTL + Expression Language (EL)</h3>
+      <p><strong>What:</strong> JSP is the server-side view technology. JSTL provides HTML-like standard tags. EL provides <code>${variable}</code> syntax to access data without scriptlets.</p>
+      <ul class="checkmarks">
+        <li><code>login.jsp</code>, <code>register.jsp</code>, <code>index.jsp</code> — Public pages</li>
+        <li><code>admin/dashboard.jsp</code> — KPI cards using EL: <code>${requestScope.totalStudents}</code></li>
+        <li><code>admin/students.jsp</code> — Student list with <code>&lt;c:forEach&gt;</code></li>
+        <li><code>admin/reports.jsp</code> — Financial report with <code>&lt;fmt:formatNumber&gt;</code></li>
+        <li><code>student/receipt.jsp</code> — Printable payment receipt</li>
+        <li><code>common/header.jsp</code>, <code>footer.jsp</code>, <code>alert.jsp</code> — Reusable fragments</li>
+      </ul>
+      <p style="margin-top:10px;"><strong>JSTL Tags used:</strong> <code>&lt;c:forEach&gt;</code> &nbsp; <code>&lt;c:if&gt;</code> &nbsp; <code>&lt;c:choose&gt;</code> &nbsp; <code>&lt;c:url&gt;</code> &nbsp; <code>&lt;fmt:formatNumber&gt;</code> &nbsp; <code>&lt;fmt:formatDate&gt;</code></p>
+    </div>
+
+    <!-- Hibernate -->
+    <div class="card green">
+      <h3>🗺️ Hibernate ORM 5</h3>
+      <p><strong>What:</strong> Object-Relational Mapping framework. Maps Java entity classes to database tables, eliminating repetitive SQL for transactional entities.</p>
+      <ul class="checkmarks">
+        <li><code>Student.java</code> → <code>students</code> table with <code>@ManyToOne</code> to Course &amp; User</li>
+        <li><code>FeeAssignment.java</code> → <code>fee_assignments</code> table</li>
+        <li><code>Payment.java</code> → <code>payments</code> table (TXN ref, receipt number, status)</li>
+        <li><code>HibernateUtil.java</code> — Singleton <code>SessionFactory</code> initialized once at startup</li>
+        <li>HQL queries: <code>FROM FeeAssignment WHERE student.studentId = :id</code></li>
+      </ul>
+      <p style="margin-top:10px;"><strong>Annotations used:</strong> <code>@Entity</code> &nbsp; <code>@Table</code> &nbsp; <code>@Id</code> &nbsp; <code>@GeneratedValue</code> &nbsp; <code>@Column</code> &nbsp; <code>@ManyToOne</code> &nbsp; <code>@JoinColumn</code></p>
+    </div>
+
+    <!-- Spring Core -->
+    <div class="card purple">
+      <h3>🌱 Spring Framework — Core IoC / Dependency Injection</h3>
+      <p><strong>What:</strong> Spring Core's IoC container creates and manages object lifecycles, automatically injecting dependencies instead of hardcoding <code>new Object()</code>.</p>
+      <ul class="checkmarks">
+        <li><code>applicationContext.xml</code> — defines all DAO and Service beans with setter injection</li>
+        <li><code>SpringContextHelper.java</code> — loads <code>ClassPathXmlApplicationContext</code>, supplies beans to Servlets</li>
+        <li><code>StudentService</code> ← injected <code>StudentDAO</code> (Hibernate)</li>
+        <li><code>PaymentService</code> ← injected <code>PaymentDAO</code> (Hibernate)</li>
+        <li><code>FeeService</code> ← injected <code>FeeDAO</code> (Hibernate)</li>
+        <li><code>CourseService</code> ← injected <code>CourseDAO</code> (JDBC)</li>
+        <li><code>UserService</code> ← injected <code>UserDAO</code> (JDBC)</li>
+      </ul>
+      <div class="highlight">
+        <p>⚠️ <strong>Note:</strong> This project uses <strong>Spring Core only</strong> (IoC/DI via XML).
+          <strong>Spring MVC is NOT used</strong> — plain Java Servlets handle all HTTP routing.</p>
+      </div>
+    </div>
+
+    <!-- Swing -->
+    <div class="card amber">
+      <h3>🖥️ Java Swing — Desktop Utility</h3>
+      <p><strong>What:</strong> Java's built-in GUI toolkit for standalone desktop applications.</p>
+      <ul class="checkmarks">
+        <li><code>FeeReceiptViewer.java</code> — standalone admin desktop tool</li>
+        <li>Connects directly to MySQL via JDBC (no Tomcat / browser required)</li>
+        <li>Displays results in a <code>JTable</code></li>
+        <li>Search by Receipt Number, Student Roll Number, or Student Name</li>
+        <li>Opens a formatted printable receipt dialog</li>
+        <li>Designed for institute receptionists for fast offline access</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── 4. FUNCTIONALITY ── -->
+  <section>
+    <h2>⚡ 4. Functionality</h2>
+    <div class="grid-2">
+      <div class="card red">
+        <h3>🔐 Admin Portal</h3>
+        <ul class="checkmarks">
+          <li>Secure Login / Logout with HttpSession</li>
+          <li>Real-time KPI Dashboard</li>
+          <li>Student Registration, Edit &amp; Delete</li>
+          <li>Course Catalog Management</li>
+          <li>Fee Assignment (amount, due date, period)</li>
+          <li>Payment Records with Search &amp; Filter</li>
+          <li>Course-wise Financial Reports with Progress Bars</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>👨‍🎓 Student Portal</h3>
+        <ul class="checkmarks">
+          <li>Self-Registration &amp; Login</li>
+          <li>Dashboard — course, fee, balance overview</li>
+          <li>Fee Details with academic period itemization</li>
+          <li>Simulated Pay Now — UPI / Card / Net Banking</li>
+          <li>Auto-generated TXN Reference &amp; Receipt Number</li>
+          <li>Payment History View</li>
+          <li>Printable Electronic Receipt (window.print())</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card teal">
+      <h3>🔒 Security — Role-Based Access Control</h3>
+      <p><code>AuthFilter</code> intercepts all requests to <code>/admin/*</code> and <code>/student/*</code>. Unauthenticated users are redirected to login. Cross-role access is blocked. Session invalidated on logout.</p>
+    </div>
+
+    <h3>💳 Simulated Payment Flow</h3>
+    <div class="flow">
+      <div class="flow-step">Student<br/>Login</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">View Fee<br/>Details</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Click<br/>Pay Now</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Choose<br/>Method</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Server<br/>Validates</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Generate<br/>TXN + REC</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Hibernate<br/>Saves</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Print<br/>Receipt</div>
+    </div>
+  </section>
+
+  <!-- ── 5. DIRECTORY STRUCTURE ── -->
+  <section>
+    <h2>📁 5. Project Directory Structure</h2>
+    <pre><code><span class="dir">d:\AJT Prj/</span>
+├── <span class="file">pom.xml</span>                           <span class="cmt"># Maven build &amp; dependencies</span>
+├── <span class="file">README.md</span>                         <span class="cmt"># Setup instructions</span>
+├── <span class="file">VIVA_GUIDE.md</span>                     <span class="cmt"># Viva Q&amp;A preparation</span>
+├── <span class="dir">database/</span>
+│   └── <span class="file">tuition_fee_management.sql</span>   <span class="cmt"># DB schema &amp; seed data</span>
+└── <span class="dir">src/main/</span>
+    ├── <span class="dir">java/com/tuitionfee/</span>
+    │   ├── <span class="dir">model/</span>       <span class="cmt"># Entities: User, Course, Student, FeeAssignment, Payment</span>
+    │   ├── <span class="dir">dao/</span>         <span class="cmt"># DAO Interfaces + Impls (JDBC &amp; Hibernate)</span>
+    │   ├── <span class="dir">service/</span>     <span class="cmt"># Spring-managed Business Services</span>
+    │   ├── <span class="dir">servlet/</span>     <span class="cmt"># HTTP Controllers (LoginServlet, PaymentServlet…)</span>
+    │   ├── <span class="dir">filter/</span>      <span class="cmt"># AuthFilter — role-based security</span>
+    │   ├── <span class="dir">util/</span>        <span class="cmt"># DBConnection, HibernateUtil, SpringContextHelper</span>
+    │   ├── <span class="dir">exception/</span>   <span class="cmt"># AppException, InvalidPaymentException</span>
+    │   └── <span class="dir">swing/</span>       <span class="cmt"># FeeReceiptViewer desktop utility</span>
+    ├── <span class="dir">resources/</span>
+    │   ├── <span class="file">db.properties</span>            <span class="cmt"># MySQL JDBC config</span>
+    │   ├── <span class="file">hibernate.cfg.xml</span>        <span class="cmt"># Hibernate ORM configuration</span>
+    │   └── <span class="file">applicationContext.xml</span>   <span class="cmt"># Spring Core DI bean wiring</span>
+    └── <span class="dir">webapp/</span>
+        ├── <span class="dir">WEB-INF/web.xml</span>          <span class="cmt"># Servlet descriptor, error pages</span>
+        ├── <span class="dir">css/style.css</span>            <span class="cmt"># Custom styles &amp; print layout</span>
+        ├── <span class="dir">js/validation.js</span>         <span class="cmt"># Client-side form validations</span>
+        ├── <span class="dir">common/</span>                  <span class="cmt"># header.jsp, footer.jsp, alert.jsp</span>
+        ├── <span class="dir">admin/</span>                   <span class="cmt"># dashboard, students, courses, reports…</span>
+        └── <span class="dir">student/</span>                 <span class="cmt"># dashboard, fee-details, payment, receipt</span></code></pre>
+  </section>
+
+  <!-- ── 6. DATABASE SCHEMA ── -->
+  <section>
+    <h2>🗄️ 6. Database Schema</h2>
+    <p>Database: <code>tuition_fee_management</code> &nbsp;|&nbsp; Engine: InnoDB &nbsp;|&nbsp; Charset: utf8mb4</p>
+    <div class="grid-2">
+      <div class="schema-table">
+        <div class="schema-header">📋 users</div>
+        <ul>
+          <li><span class="col-pk">user_id</span><span class="col-type">INT PK AUTO_INCREMENT</span></li>
+          <li>name<span class="col-type">VARCHAR(100)</span></li>
+          <li>email<span class="col-type">VARCHAR(120) UNIQUE</span></li>
+          <li>password<span class="col-type">VARCHAR(255)</span></li>
+          <li>role<span class="col-type">ENUM(ADMIN, STUDENT)</span></li>
+          <li>phone<span class="col-type">VARCHAR(20)</span></li>
+          <li>created_at<span class="col-type">TIMESTAMP</span></li>
+        </ul>
+      </div>
+      <div class="schema-table">
+        <div class="schema-header">📚 courses</div>
+        <ul>
+          <li><span class="col-pk">course_id</span><span class="col-type">INT PK AUTO_INCREMENT</span></li>
+          <li>course_name<span class="col-type">VARCHAR(120)</span></li>
+          <li>duration<span class="col-type">VARCHAR(50)</span></li>
+          <li>total_fee<span class="col-type">DECIMAL(10,2)</span></li>
+          <li>description<span class="col-type">TEXT</span></li>
+        </ul>
+      </div>
+      <div class="schema-table">
+        <div class="schema-header">👨‍🎓 students</div>
+        <ul>
+          <li><span class="col-pk">student_id</span><span class="col-type">INT PK</span></li>
+          <li><span class="col-fk">user_id</span><span class="col-type">FK → users CASCADE</span></li>
+          <li>roll_number<span class="col-type">VARCHAR(50) UNIQUE</span></li>
+          <li><span class="col-fk">course_id</span><span class="col-type">FK → courses</span></li>
+          <li>address<span class="col-type">TEXT</span></li>
+          <li>admission_date<span class="col-type">DATE</span></li>
+        </ul>
+      </div>
+      <div class="schema-table">
+        <div class="schema-header">💰 fee_assignments</div>
+        <ul>
+          <li><span class="col-pk">assignment_id</span><span class="col-type">INT PK</span></li>
+          <li><span class="col-fk">student_id</span><span class="col-type">FK → students CASCADE</span></li>
+          <li>total_fee<span class="col-type">DECIMAL(10,2)</span></li>
+          <li>due_date<span class="col-type">DATE</span></li>
+          <li>academic_period<span class="col-type">VARCHAR(60)</span></li>
+          <li>remarks<span class="col-type">VARCHAR(255)</span></li>
+        </ul>
+      </div>
+      <div class="schema-table" style="grid-column: 1 / -1;">
+        <div class="schema-header">🧾 payments</div>
+        <ul>
+          <li><span class="col-pk">payment_id</span><span class="col-type">INT PK AUTO_INCREMENT</span></li>
+          <li><span class="col-fk">assignment_id</span><span class="col-type">FK → fee_assignments CASCADE</span></li>
+          <li>amount_paid<span class="col-type">DECIMAL(10,2)</span></li>
+          <li>payment_date<span class="col-type">TIMESTAMP</span></li>
+          <li>payment_method<span class="col-type">VARCHAR(50)</span></li>
+          <li>transaction_reference<span class="col-type">VARCHAR(80) UNIQUE</span></li>
+          <li>payment_status<span class="col-type">ENUM(PAID, PENDING, PARTIAL)</span></li>
+          <li>receipt_number<span class="col-type">VARCHAR(80) UNIQUE</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7. SETUP GUIDE ── -->
+  <section>
+    <h2>🚀 7. Setup &amp; Installation Guide</h2>
+    <ol class="steps">
+      <li>
+        <strong>Start XAMPP</strong> — Open XAMPP Control Panel, start <strong>Apache</strong> and
+        <strong>MySQL</strong>. Go to <code>http://localhost/phpmyadmin/</code>
+        → Import tab → Select <code>database/tuition_fee_management.sql</code> → Click Go.
+      </li>
+      <li>
+        <strong>Open Project in NetBeans</strong> — File → Open Project → Browse to <code>d:\AJT Prj</code>
+        (contains <code>pom.xml</code>). NetBeans auto-detects it as a Maven Web Application.
+      </li>
+      <li>
+        <strong>Configure Apache Tomcat</strong> — Services tab → right-click Servers → Add Server
+        → Apache Tomcat/TomEE → point to Tomcat installation directory → Finish.
+      </li>
+      <li>
+        <strong>Check DB Credentials</strong> — If MySQL has a password, update
+        <code>src/main/resources/db.properties</code> and <code>hibernate.cfg.xml</code>.
+        (Default: root / no password on port 3306)
+      </li>
+      <li>
+        <strong>Run Web Application</strong> — Right-click project → Run (F6). Browser opens at:
+        <code>http://localhost:8080/TuitionFeeManagement/</code>
+      </li>
+      <li>
+        <strong>Run Swing Desktop Utility</strong> — Navigate to
+        <code>com.tuitionfee.swing.FeeReceiptViewer.java</code> → right-click → Run File (Shift + F6).
+      </li>
+    </ol>
+  </section>
+
+  <!-- ── 8. DEMO CREDENTIALS ── -->
+  <section>
+    <h2>🔑 8. Demo Login Credentials</h2>
+    <div class="cred-grid">
+      <div class="cred-card admin-card">
+        <h4>🛡️ System Administrator <span class="role-pill role-admin">ADMIN</span></h4>
+        <div class="label">Email</div>
+        <div class="value">admin@tuition.com</div>
+        <div class="label">Password</div>
+        <div class="value">admin123</div>
+        <div class="label">Access</div>
+        <div class="value">Full admin portal</div>
+      </div>
+      <div class="cred-card">
+        <h4>👨‍🎓 Rahul Sharma <span class="role-pill role-student">STUDENT</span></h4>
+        <div class="label">Email</div>
+        <div class="value">rahul@student.com</div>
+        <div class="label">Password</div>
+        <div class="value">student123</div>
+        <div class="label">Fee Status</div>
+        <div class="value">✅ Fully Paid (₹45,000)</div>
+      </div>
+      <div class="cred-card">
+        <h4>👩‍🎓 Priya Patel <span class="role-pill role-student">STUDENT</span></h4>
+        <div class="label">Email</div>
+        <div class="value">priya@student.com</div>
+        <div class="label">Password</div>
+        <div class="value">student123</div>
+        <div class="label">Fee Status</div>
+        <div class="value">⚠️ Partial — ₹22,000 pending</div>
+      </div>
+      <div class="cred-card">
+        <h4>👨‍🎓 Aman Verma <span class="role-pill role-student">STUDENT</span></h4>
+        <div class="label">Email</div>
+        <div class="value">aman@student.com</div>
+        <div class="label">Password</div>
+        <div class="value">student123</div>
+        <div class="label">Fee Status</div>
+        <div class="value">❌ Pending (₹45,000)</div>
+      </div>
+    </div>
+    <div class="highlight" style="margin-top:16px;">
+      <p>💡 <strong>Tip:</strong> Use the one-click demo prefill buttons on the login page to auto-fill credentials instantly!</p>
+    </div>
+  </section>
+
+  <!-- ── 9. TECH STACK OVERVIEW ── -->
+  <section>
+    <h2>🛠️ 9. Full Technology Stack</h2>
+    <div class="grid-3">
+      <div class="tech-card">
+        <div class="icon">☕</div>
+        <h4>Java 8</h4>
+        <p>Core language — OOP, Collections, Exception Handling, try-with-resources</p>
+        <span class="pill">JDK 1.8</span>
+      </div>
+      <div class="tech-card">
+        <div class="icon">🌐</div>
+        <h4>Java Servlets</h4>
+        <p>HTTP Controller layer — request/response, session management, filters</p>
+        <span class="pill">Servlet API 4.0.1</span>
+      </div>
+      <div class="tech-card">
+        <div class="icon">📄</div>
+        <h4>JSP + JSTL + EL</h4>
+        <p>Scriptlet-free presentation layer with JSTL standard tags</p>
+        <span class="pill">JSP 2.3 / JSTL 1.2</span>
+      </div>
+      <div class="tech-card">
+        <div class="icon">🔌</div>
+        <h4>JDBC</h4>
+        <p>Raw SQL access with PreparedStatement — prevents SQL injection</p>
+        <span class="pill">MySQL Connector 8.0.33</span>
+      </div>
+      <div class="tech-card">
+        <div class="icon">🗺️</div>
+        <h4>Hibernate ORM</h4>
+        <p>Object-relational mapping, SessionFactory, HQL queries, annotations</p>
+        <span class="pill">Hibernate 5.6.15</span>
+      </div>
+      <div class="tech-card">
+        <div class="icon">🌱</div>
+        <h4>Spring Core</h4>
+        <p>IoC container, XML-based Dependency Injection for all service beans</p>
+        <span class="pill">Spring 5.3.31</span>
+      </div>
+      <div class="tech-card">
+        <div class="icon">🖥️</div>
+        <h4>Java Swing</h4>
+        <p>Standalone desktop receipt viewer with JTable and print dialog</p>
+        <span class="pill">JDK Built-in</span>
+      </div>
+      <div class="tech-card">
+        <div class="icon">🗄️</div>
+        <h4>MySQL + XAMPP</h4>
+        <p>Relational DB — 5 tables, foreign keys, cascade rules, InnoDB engine</p>
+        <span class="pill">MySQL 8.x</span>
+      </div>
+      <div class="tech-card">
+        <div class="icon">🚀</div>
+        <h4>Apache Tomcat</h4>
+        <p>Servlet container and WAR deployment server</p>
+        <span class="pill">Tomcat 9 / 10</span>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>
+    <strong>Tuition Fee Payment Management System</strong> &nbsp;|&nbsp;
+    Advanced Java Technology (AJT) Project
+  </p>
+  <p style="margin-top:8px;">
+    Java 8 &nbsp;·&nbsp; Hibernate &nbsp;·&nbsp; Spring Core &nbsp;·&nbsp;
+    Servlets &nbsp;·&nbsp; JSP &nbsp;·&nbsp; JDBC &nbsp;·&nbsp; Swing &nbsp;·&nbsp;
+    MySQL &nbsp;·&nbsp; Apache Tomcat &nbsp;·&nbsp; Apache Maven &nbsp;·&nbsp; NetBeans IDE
+  </p>
+</div>
+
+</body>
+</html>

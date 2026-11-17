@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database Connection Settings (XAMPP MySQL) -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/tuition_fee_management?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password"></property>
+
+        <!-- SQL Dialect for MySQL -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+        <!-- Echo all executed SQL to stdout (for debugging & viva demonstration) -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Thread-bound session management -->
+        <property name="hibernate.current_session_context_class">thread</property>
+
+        <!-- Validate schema without altering table structure -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Annotated Entity Classes -->
+        <mapping class="com.tuitionfee.model.User"/>
+        <mapping class="com.tuitionfee.model.Course"/>
+        <mapping class="com.tuitionfee.model.Student"/>
+        <mapping class="com.tuitionfee.model.FeeAssignment"/>
+        <mapping class="com.tuitionfee.model.Payment"/>
+    </session-factory>
+</hibernate-configuration>
